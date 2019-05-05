@@ -23,10 +23,6 @@ def allowed_file(filename):
 def home():
 	return fa.render_template('homepage.html')
 
-@app.route('/error')
-def error():
-    return fa.render_template('errorPage.html')
-
 @app.route('/result',methods=['GET', 'POST'])
 def get_upload():
     if fa.request.method == 'POST':
