@@ -1,4 +1,4 @@
-import flask as fl
+import flask as fa
 import numpy as np
 import tensorflow as tf
 import keras
@@ -9,7 +9,7 @@ import os
 
 UPLOAD_FOLDER = './uploads/'
 ALLOWED_EXTENSIONS = set(['wav'])
-app = fl.Flask(__name__)
+app = fa.Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 global model, graph
 model = load_model('./model/voice_model.h5')
@@ -21,27 +21,34 @@ def allowed_file(filename):
 
 @app.route('/')
 def home():
-	return fl.render_template('homepage.html')
+	return fa.render_template('homepage.html')
+
+@app.route('/error')
+def error():
+    return fa.render_template('errorPage.html')
 
 @app.route('/result',methods=['GET', 'POST'])
 def get_upload():
-    if fl.request.method == 'POST':
-        file = fl.request.files['file']
+    if fa.request.method == 'POST':
+        file = fa.request.files['file']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             y, sr = librosa.load('uploads/'+ filename, duration=2.97)
             ps = librosa.feature.melspectrogram(y=y, sr=sr)
-            ps = np.array([ps.reshape( (128, 128, 1) )])
-            with graph.as_default():
-                prediction = model.predict_classes(ps)
-                deg = model.predict(ps)
-                deg = deg[0][prediction]
-                deg = int(deg) * 100
-                if prediction == 1:
-                    return fl.render_template('result.html', result = 'linda', degree = deg)
-                else:
-                    return fl.render_template('result.html', result = 'random', degree = deg)
+            if ps.shape != (128, 128):
+                return error()
+            else:    
+                ps = np.array([ps.reshape( (128, 128, 1) )])
+                with graph.as_default():
+                    prediction = model.predict_classes(ps)
+                    deg = model.predict(ps)
+                    deg = deg[0][prediction]
+                    deg = float(deg) * 100
+                    if prediction == 1:
+                        return fa.render_template('result.html', result = 'linda', degree = deg)
+                    else:
+                        return fa.render_template('result.html', result = 'random', degree = deg)
     
 if __name__ == '__main__':
     app.run(debug=True)
