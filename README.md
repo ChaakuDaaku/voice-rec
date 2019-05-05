@@ -19,4 +19,4 @@ python app/app.py
 
 
 ## TOOD
-* Add Percent match feature
+* ~Add Percent match feature~
