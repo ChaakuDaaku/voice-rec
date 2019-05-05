@@ -33,15 +33,13 @@ def get_upload():
             y, sr = librosa.load('uploads/'+ filename, duration=2.97)
             ps = librosa.feature.melspectrogram(y=y, sr=sr)
             ps = np.array([ps.reshape( (128, 128, 1) )])
-            # y = keras.utils.to_categorical(y, 4)
-            # y= y/y
             with graph.as_default():
                 prediction = model.predict_classes(ps)
-                # score = model.evaluate(ps, np.array(y))
+                deg = model.predict(ps)
                 if prediction == 1:
-                    return fl.render_template('result.html', result = 'linda')
+                    return fl.render_template('result.html', result = 'linda', degree = deg)
                 else:
-                    return fl.render_template('result.html', result = 'random')
+                    return fl.render_template('result.html', result = 'random', degree = deg)
     
 if __name__ == '__main__':
     app.run(debug=True)
