@@ -36,6 +36,8 @@ def get_upload():
             with graph.as_default():
                 prediction = model.predict_classes(ps)
                 deg = model.predict(ps)
+                deg = deg[0][prediction]
+                deg = deg*100
                 if prediction == 1:
                     return fl.render_template('result.html', result = 'linda', degree = deg)
                 else:
