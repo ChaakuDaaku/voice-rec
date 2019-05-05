@@ -37,7 +37,8 @@ def get_upload():
             y, sr = librosa.load('uploads/'+ filename, duration=2.97)
             ps = librosa.feature.melspectrogram(y=y, sr=sr)
             if ps.shape != (128, 128):
-                return error()
+                errorMsg = "Please enter file with duration greater than 3 secs"
+                return fa.render_template('homepage.html', errorMessage = errorMsg)
             else:    
                 ps = np.array([ps.reshape( (128, 128, 1) )])
                 with graph.as_default():

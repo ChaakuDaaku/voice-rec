@@ -4,7 +4,8 @@
 <body style="text-align: center">
 <h2 style="text-align: center">Voice Recognition App</h2>
 <form action = "/result" method = "POST" enctype = "multipart/form-data">
-    Select a file: <input type="file" name="file" accept=".wav"><br><br>
+    Select a file: <input type="file" name="file" accept=".wav" required><br><br>
+    <p style="color: red">{{errorMessage}}</p>
     <p> <input type ="submit" value="Submit" /> </p>
 </form>
 </body>
