@@ -18,5 +18,5 @@ python app/app.py
 ```
 
 
-## TOOD
+## TODO
 * ~Add Percent match feature~
